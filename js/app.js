@@ -33,8 +33,9 @@ function dataURLtoFile(dataUrl, filename) {
   let uploadedImageFiles = JSON.parse(localStorage.getItem("uploadedImages")) || [];
   let selectedIngredients = [];
   let addedIngredients = [];
-  const SPOONACULAR_API_KEY = "d35c874c481a4982b13def27755c86f7";
   
+  const SPOONACULAR_API_KEY = "6756d2feb04246b5b5a1e19301f63742"; //sj
+  // const SPOONACULAR_API_KEY = "d35c874c481a4982b13def27755c86f7"; //pv
   // Display images from localStorage
   uploadedImageFiles.forEach((fileData) => {
     displayImage(fileData);

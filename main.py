@@ -38,7 +38,7 @@ def detect_labels(image_content, max_results=50):
     response = client.annotate_image(request=request)
 
     labels = [label.description for label in response.label_annotations]
-    print(labels)
+
     return labels
 
 # Function to query Gemini for filtering fruits and vegetables
@@ -69,6 +69,7 @@ def filter_fruits_and_vegetables(labels):
     else:
         filtered_labels = []
 
+    print(filtered_labels)
     return filtered_labels
 
 @app.get("/")
