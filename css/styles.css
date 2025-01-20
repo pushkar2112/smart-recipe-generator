@@ -140,6 +140,7 @@ footer {
   flex-wrap: wrap;
   gap: 15px;
   margin-top: 20px;
+  justify-content: left;
 }
 
 .image-preview img {
@@ -152,12 +153,14 @@ footer {
 
 .image-preview .img-container {
   position: relative;
+  width: 120px;
+  height: 120px;
 }
 
 .image-preview .remove-btn {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -5px;
+  right: -5px;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
@@ -259,7 +262,7 @@ footer {
 
   .image-preview {
     gap: 10px;
-    justify-content: center;
+    justify-content: left;
   }
 
   .image-preview img {
