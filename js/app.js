@@ -147,7 +147,7 @@ function dataURLtoFile(dataUrl, filename) {
     try {
       loader.classList.remove("d-none");  // Show loader during upload
   
-      const response = await fetch("http://127.0.0.1:8000/upload/", { method: "POST", body: formData });
+      const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
       const result = await response.json();
   
       if (response.ok) {
