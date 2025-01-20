@@ -47,12 +47,13 @@ def filter_fruits_and_vegetables(labels):
     
     # Prepare the prompt for Gemini
     labels_str = ", ".join(labels)
-    query = f"Here is an array: [{labels_str}] Filter out the ingredients that are not commonly found in a typical household kitchen, such as rare or exotic varieties. Return only the ingredients that are most commonly found in households, in an array. Only return the array in your response, no other explanation or categorization."
+    print(labels_str)
+    query = f"Here is an array of ingredients: [{labels_str}] Please filter out any ingredients that are rare, exotic, or unusual, and return only those that are commonly found in a typical household kitchen (such as pantry staples, common vegetables, fruits, and everyday seasonings). Ensure the result contains only these typical household ingredients in an array, and do not provide any additional explanations or categorization."
 
     # Make a request to Gemini
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(query)
-    
+    print(response)
     # Extract the filtered list from the response and parse it
     filtered_labels_str = response.text.strip()
     
