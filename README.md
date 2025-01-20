@@ -87,7 +87,6 @@ Select a recipe from the suggestions to view detailed instructions and ingredien
 - Data is processed on the fly and is not stored after the user exits the session.
 
 ## Future Enhancements
-- Implementing advanced ingredient recognition using machine learning.
 - Adding support for multiple languages.
 - Allowing users to save or share recipes without compromising privacy.
 - Integrating more robust dietary preference filters.
