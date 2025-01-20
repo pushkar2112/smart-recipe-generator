@@ -54,9 +54,15 @@ def filter_fruits_and_vegetables(labels):
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(query)
     print(response)
+
     # Extract the filtered list from the response and parse it
     filtered_labels_str = response.text.strip()
-    
+
+    # Handle empty or invalid responses
+    if not filtered_labels_str:
+        print("Received an empty or invalid response. Please try again!")
+        return []
+
     # Use regex to extract content between square brackets
     match = re.search(r'\[(.*?)\]', filtered_labels_str)
     if match:
@@ -66,12 +72,15 @@ def filter_fruits_and_vegetables(labels):
         try:
             filtered_labels = ast.literal_eval(filtered_labels_str)
         except ValueError:
-            filtered_labels = []  # If there's an issue with parsing, return an empty list
+            print("Error parsing the filtered labels response.")
+            filtered_labels = []  # Return empty list if there's an issue with parsing
     else:
-        filtered_labels = []
+        print("No valid array found in the response.")
+        filtered_labels = []  # Return empty list if the response doesn't contain the expected array format
 
     print(filtered_labels)
     return filtered_labels
+
 
 @app.get("/")
 def root():

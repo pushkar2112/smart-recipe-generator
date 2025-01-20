@@ -150,7 +150,13 @@ function dataURLtoFile(dataUrl, filename) {
   
       const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
       const result = await response.json();
-  
+      
+      // Check for empty or invalid response
+      if (!result || !Array.isArray(result.filtered_fruits_and_vegetables) || result.filtered_fruits_and_vegetables.length === 0) {
+        alert("No recognizable ingredients found, please try again with a different image!");
+        return; // Stop further execution
+      }
+
       if (response.ok) {
         populateChecklist(result.filtered_fruits_and_vegetables);
         console.log("called");
@@ -164,7 +170,8 @@ function dataURLtoFile(dataUrl, filename) {
     } finally {
       loader.classList.add("d-none");  // Hide loader after the upload process
     }
-  }
+}
+
   
   // Populate checklist with ingredients
 function populateChecklist(items) {

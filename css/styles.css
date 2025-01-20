@@ -1,322 +1,282 @@
+/* Base styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #f9f9f9;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 10px 5%;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 36px;
+  color: #333;
+  font-weight: 700;
+}
+
+nav a {
+  text-decoration: none;
+  color: #555;
+  margin: 0 20px;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #ff7a00;
+}
+
+/* Main content */
+main {
+  padding: 5px 5%;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.col-lg-6 {
+  flex: 1;
+  min-width: 320px;
+}
+
+h2 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Upload section */
+.upload-section {
+  background-color: #f5f5f5;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+  padding: 30px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.upload-section input[type="file"] {
+  display: none;
+}
+
+.upload-section:hover {
+  background-color: #eaeaea;
+}
+
+/* Form sections */
+.form-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h3 {
+  font-size: 22px;
+  color: #000000;
+  margin-bottom: 15px;
+}
+
+.form-section label {
+  display: block;
+  margin: 8px 0;
+  font-size: 16px;
+  color: #000000;
+}
+
+.form-section input[type="checkbox"] {
+  margin-right: 10px;
+  border: 1px solid #000000;
+}
+
+.form-section button {
+  background-color: #0073e6;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-section button:hover {
+  background-color: #005bb5;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px 0;
+  background-color: #ffffff;
+  color: #666;
+  font-size: 14px;
+  margin-top: 30px;
+  border-top: 1px solid #ddd;
+}
+
+/* Image Preview */
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.image-preview img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.image-preview .img-container {
+  position: relative;
+}
+
+.image-preview .remove-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.image-preview .img-container:hover .remove-btn {
+  opacity: 1;
+}
+
+/* Response section */
+.response-section {
+  background-color: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 30px;
+}
+
+.response-section h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.response-section p {
+  font-size: 16px;
+  color: #555;
+}
+
+.preferences-allergies {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.preferences-allergies .form-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.save-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.save-preferences-btn {
+  background: linear-gradient(90deg, #00b5ff, #008cff);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.save-preferences-btn:hover {
+  transform: scale(1.05);
+}
+
+.save-preferences-btn:active {
+  transform: scale(0.98);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
   header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #ffffff;
-    padding: 20px 10%;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  header h1 {
-    font-size: 24px;
-    color: #333;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #555;
-    margin: 0 15px;
-    font-size: 16px;
-  }
-  
-  nav a:hover {
-    color: #ff7a00;
-  }
-  
-  .main-banner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 50px 10%;
-    background-color: #ffffff;
-  }
-  
-  .banner-content {
-    max-width: 50%;
-  }
-  
-  .banner-content h2 {
-    font-size: 36px;
-    color: #333;
-    margin-bottom: 15px;
-  }
-  
-  .banner-content p {
-    font-size: 18px;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  .upload-section {
-    background-color: #f5f5f5;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    text-align: center;
-    padding: 20px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    position: relative;
-  }
-  
-  .upload-section input[type="file"] {
-    display: none;
-  }
-  
-  .form-section {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-section h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  
-  .form-section label {
-    display: block;
-    margin: 10px 0;
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .form-section input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  .form-section button {
-    background-color: #0073e6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 15px;
-  }
-  
-  .form-section button:hover {
-    background-color: #005bb5;
-  }
-  
-  footer {
-    text-align: center;
-    padding: 15px;
-    background-color: #ffffff;
-    color: #666;
-    font-size: 14px;
-    margin-top: 20px;
-  }
-  
-  /* Image preview styles */
-  .image-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .image-preview img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  .image-preview .img-container {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .image-preview .remove-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    font-size: 12px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .response-section {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-  }
-  
-  .response-section h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .response-section p {
-    font-size: 16px;
-    color: #555;
-  }
-  
-  .response-section .image-preview {
-    margin-top: 10px;
-  }
-  
-  .preferences-allergies {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-  }
-  
-  .preferences-allergies .form-section {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .preferences-allergies .form-section:last-child {
-    margin-right: 0;
-  }
-  
-  .save-btn-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .save-preferences-btn {
-    background: linear-gradient(90deg, #00b5ff, #008cff);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 50px;
-    cursor: pointer;
-  }
-  
-  .save-preferences-btn:hover {
-    animation: rotateGradient 5s infinite linear;
-  }
-  
-  @keyframes rotateGradient {
-    0% {
-      background: linear-gradient(0deg, #00b5ff, #008cff);
-    }
-    25% {
-      background: linear-gradient(90deg, #00b5ff, #008cff);
-    }
-    50% {
-      background: linear-gradient(180deg, #00b5ff, #008cff);
-    }
-    75% {
-      background: linear-gradient(270deg, #00b5ff, #008cff);
-    }
-    100% {
-      background: linear-gradient(360deg, #00b5ff, #008cff);
-    }
-  }
-  
-  .image-hover {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .remove-cross {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 18px;
-    color: red;
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    padding: 5px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  
-  .image-hover:hover .remove-cross {
-    opacity: 1;
-  }
-  .remove-btn {
-    display: none;
-    background: transparent;
-    border: none;
-    color: red;
-    font-size: 1.5rem;
-  }
-  
-  .img-container:hover .remove-btn {
-    display: block;
+    padding: 20px 5%;
   }
 
-  /* Styling for the Remove Button (X) */
-.remove-btn {
-    display: none;
-    background: transparent;
-    border: none;
-    color: red;
-    font-size: 1.5rem;
+  .row {
+    flex-direction: column;
   }
-  
-  .img-container:hover .remove-btn {
-    display: block;
+
+  .col-lg-6 {
+    width: 100%;
   }
-  
-  /* Styling for the Add Ingredients Section */
-  .add-ingredients {
+
+  .main-banner {
+    padding: 30px 5%;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .banner-content {
+    max-width: 100%;
+  }
+
+  .form-section {
+    padding: 15px;
+  }
+
+  .upload-section {
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
   }
-  
-  .add-ingredients input {
-    border-radius: 5px;
+}
+
+@media (max-width: 576px) {
+  .form-section button {
+    width: 100%;
   }
-  
-  .add-ingredients button {
-    border-radius: 5px;
+
+  .image-preview {
+    gap: 10px;
   }
-  
-  /* Styling for the Final Submit Button */
-  #finalSubmitBtn {
-    background-color: #28a745;
-    color: white;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+
+  .image-preview img {
+    width: 80px;
+    height: 80px;
   }
-  
-  #finalSubmitBtn:hover {
-    background-color: #218838;
+
+  .response-section {
+    padding: 20px;
   }
-  
-  #finalSubmitBtn.d-none {
-    display: none;
-  }
-  
-  /* Style for input box */
-#ingredientInputBox {
-    max-width: 500px;
-    margin-top: 20px;
-  }
-  
-  #finalIngredientsDisplay {
-    margin-top: 20px;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
-  }
-  
+}
