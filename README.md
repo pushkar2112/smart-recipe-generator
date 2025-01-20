@@ -1,3 +1,6 @@
+# TL;DR
+The **Smart Recipe Generator** is a web app that allows users to upload images of ingredients, which are then recognized and refined using Google Vision and Gemini APIs. Users can customize recipe suggestions by entering dietary preferences and restrictions. The app fetches recipes from the Spoonacular API, allowing users to view detailed instructions. No user accounts are required, and no data is stored after the session ends.
+
 # Smart Recipe Generator
 
 The Smart Recipe Generator is a web application that helps users create recipes instantly by analyzing uploaded images of ingredients. With a focus on simplicity and privacy, this app does not require user accounts or retain any data after the session ends.
