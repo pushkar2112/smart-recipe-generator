@@ -50,8 +50,9 @@ def filter_fruits_and_vegetables(labels):
         f"that are rare, exotic, or unusual, and return only those that are commonly found "
         f"in a typical household kitchen (such as pantry staples, common vegetables, fruits, "
         f"everyday seasonings, and common proteins like chicken, turkey, eggs, or other widely "
-        f"available and frequently used proteins). Ensure the result contains only these typical "
-        f"household ingredients in an array, and do not provide any additional explanations or categorization."
+        f"available and frequently used proteins). Ensure that your response is a valid JSON array, "
+        f"and nothing else. Do not include any code blocks, explanations, or additional formatting. "
+        f"Only provide a JSON array as the output."
     )
 
     # Make a request to Gemini API
@@ -65,13 +66,20 @@ def filter_fruits_and_vegetables(labels):
     filtered_labels_str = response.text.strip()
     print(f"Raw response from Gemini API: {filtered_labels_str}")
 
-    # Extract the array from the response
-    match = re.search(r'\[(.*?)\]', filtered_labels_str)
+    # Remove code block formatting if present
+    if filtered_labels_str.startswith("```") and filtered_labels_str.endswith("```"):
+        filtered_labels_str = filtered_labels_str.strip("```").strip()
+
+    # Extract the JSON array using regex as a fallback
+    match = re.search(r'\[.*?\]', filtered_labels_str)
     if match:
-        filtered_labels_str = match.group(0)  # Get the content inside brackets
+        filtered_labels_str = match.group(0)
         try:
-            # Parse the JSON-formatted string to a Python list
+            # Safely parse the JSON array
             filtered_labels = json.loads(filtered_labels_str)
+            if not isinstance(filtered_labels, list):
+                print("Parsed response is not a list.")
+                return []
         except json.JSONDecodeError:
             print("Error parsing the filtered labels response.")
             filtered_labels = []
@@ -81,6 +89,7 @@ def filter_fruits_and_vegetables(labels):
 
     print(f"Filtered labels: {filtered_labels}")
     return filtered_labels
+
 
 @app.get("/")
 def root():
