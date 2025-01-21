@@ -49,8 +49,9 @@ def filter_fruits_and_vegetables(labels):
         f"Here is an array of ingredients: [{labels_str}] Please filter out any ingredients "
         f"that are rare, exotic, or unusual, and return only those that are commonly found "
         f"in a typical household kitchen (such as pantry staples, common vegetables, fruits, "
-        f"and everyday seasonings). Ensure the result contains only these typical household "
-        f"ingredients in an array, and do not provide any additional explanations or categorization."
+        f"everyday seasonings, and common proteins like chicken, turkey, eggs, or other widely "
+        f"available and frequently used proteins). Ensure the result contains only these typical "
+        f"household ingredients in an array, and do not provide any additional explanations or categorization."
     )
 
     # Make a request to Gemini API
