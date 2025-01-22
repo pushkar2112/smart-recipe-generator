@@ -44,7 +44,7 @@ function dataURLtoFile(dataUrl, filename) {
     if (show) {
       loader.classList.remove("d-none");
     } else {
-      toggleLoader(true);
+      loader.classList.add("d-none");
     }
   }
 
