@@ -46,15 +46,18 @@ def filter_fruits_and_vegetables(labels):
 
     # Prepare the query for Gemini API
     query = (
-        f"Here is an array of ingredients: [{labels_str}] Please filter out any ingredients "
-        f"that are rare, exotic, or unusual, and return only those that are commonly found "
-        f"in a typical household kitchen (such as pantry staples, common vegetables, fruits, "
-        f"everyday seasonings, and common proteins like chicken, turkey, eggs, or other widely "
-        f"available and frequently used proteins). Ensure that your response is a valid JSON array, "
-        f"and nothing else. Do not include any code blocks, explanations, or additional formatting. "
-        f"Only provide a JSON array as the output."
-    )
-
+    f"From the following list: [{labels_str}], return a filtered JSON array containing only specific, recognizable edible ingredients. "
+    f"This includes: "
+    f"- Common fruits, vegetables, meats, seafood, dairy, eggs, grains. "
+    f"- Named spices, herbs, teas, coffees, and condiments. "
+    f"Do not include: "
+    f"- Generic terms such as 'Ingredient,' 'Food,' 'Recipe.' or prepared food or drinks such as 'masala chai', turkish coffee', 'roast chicken' "
+    f"- Non-consumable items like 'Tableware,' 'Serveware,' 'Mug,' 'Teacup.' "
+    f"- Ambiguous or overly broad categories like 'Spice,' 'Condiment,' or 'Powder.' "
+    f"- Unusual, uncommon or extremely rare items that are not widely recognized, available in the kitchen pantry or used as ingredients. "
+    f"Respond strictly with a valid JSON array of specific edible ingredients, ensuring no additional text, explanation, or formatting errors."
+)
+    
     # Make a request to Gemini API
     model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(query)
