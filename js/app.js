@@ -33,9 +33,21 @@ function dataURLtoFile(dataUrl, filename) {
   let uploadedImageFiles = JSON.parse(localStorage.getItem("uploadedImages")) || [];
   let selectedIngredients = [];
   let addedIngredients = [];
+  const DIETARY = "dietary";
+  const ALLERGY = "allergy";
+
   
   const SPOONACULAR_API_KEY = "6756d2feb04246b5b5a1e19301f63742"; //sj
   // const SPOONACULAR_API_KEY = "d35c874c481a4982b13def27755c86f7"; //pv
+
+  function toggleLoader(show) {
+    if (show) {
+      loader.classList.remove("d-none");
+    } else {
+      toggleLoader(true);
+    }
+  }
+
   // Display images from localStorage
   uploadedImageFiles.forEach((fileData) => {
     displayImage(fileData);
@@ -100,9 +112,11 @@ function dataURLtoFile(dataUrl, filename) {
   
   // Save Preferences and Submit
   submitBtn.addEventListener("click", async () => {
+    addedIngredients.length = 0
+    selectedIngredients.length = 0
     responseSection.classList.remove("d-none");
-    const dietarySelections = collectSelections("dietary");
-    const allergySelections = collectSelections("allergy");
+    const dietarySelections = collectSelections(DIETARY);
+    const allergySelections = collectSelections(ALLERGY);
   
     dietaryPreferences.textContent = dietarySelections.length
       ? `Dietary Preferences: ${dietarySelections.join(", ")}`
@@ -114,7 +128,7 @@ function dataURLtoFile(dataUrl, filename) {
     displayUploadedImages();
   
     // Remove loader here (Make sure it's not visible before processing)
-    loader.classList.add("d-none");
+    toggleLoader(false);
   
     // Trigger image upload and ingredient fetching
     await uploadImages(dietarySelections, allergySelections);
@@ -146,7 +160,7 @@ function dataURLtoFile(dataUrl, filename) {
     });
   
     try {
-      loader.classList.remove("d-none");  // Show loader during upload
+      toggleLoader(true);  // Show loader during upload
   
       const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
       const result = await response.json();
@@ -164,11 +178,15 @@ function dataURLtoFile(dataUrl, filename) {
         ingredientInputBox.classList.remove("d-none");
       } else {
         console.error("Error uploading images:", result.message);
+        alert("Error uploading the image. Please try again!")
+        toggleLoader(false);  // Hide loader after the upload process
       }
     } catch (error) {
       console.error("Error uploading images:", error);
+      alert("Error uploading the image. Please try again!")
+      toggleLoader(false);  // Hide loader after the upload process
     } finally {
-      loader.classList.add("d-none");  // Hide loader after the upload process
+      toggleLoader(false);  // Hide loader after the upload process
     }
 }
 
@@ -256,15 +274,14 @@ function populateChecklist(items) {
   // Final Save Button and Fetch Recipes
   finalSubmitBtn.addEventListener("click", async () => {
     const finalIngredients = [...selectedIngredients, ...addedIngredients];
-    const dietarySelections = collectSelections("dietary");
-    const allergySelections = collectSelections("allergy");
+    const dietarySelections = collectSelections(DIETARY);
+    const allergySelections = collectSelections(ALLERGY);
     finalIngredientsDisplay.innerHTML = `Final Ingredients: ${finalIngredients.join(", ")}`;
-    alert("Ingredients have been locked!");
   
     // Show loader while fetching recipes
-    loader.classList.remove("d-none");
+    toggleLoader(true);
     await fetchRecipesFromAPI(finalIngredients, dietarySelections, allergySelections);
-    loader.classList.add("d-none");
+    toggleLoader(false);
   });
   
   // Function to fetch recipes and allow user selection
@@ -278,15 +295,19 @@ function populateChecklist(items) {
     });
   
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?${query}`);
-      console.log(`https://api.spoonacular.com/recipes/complexSearch?${query}`);
+      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?${query}&ignorePantry=false`);
+      console.log(`https://api.spoonacular.com/recipes/complexSearch?${query}&fillIngredients=true&ignorePantry=false`);
       
+      if (!response.ok) {
+        alert("Unable to fetch recipes. Please try again.");
+      }     
+
       const data = await response.json();
       console.log(data);
       
       displayRecipes(data.results);
     } catch (error) {
-      console.error("Error fetching recipes:", error);
+      console.error("Error fetching recipes:", error); 
     }
   }
   
@@ -313,16 +334,21 @@ function populateChecklist(items) {
   
   // Function to fetch and display recipe details
   async function selectRecipe(recipeId) {
-    loader.classList.remove("d-none");
+    toggleLoader(true);
   
     try {
       const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`);
+      
+      if (!response.ok) {
+        alert("Unable to fetch recipes. Please try again.");
+      }     
+      
       const data = await response.json();
       showRecipeDetails(data);
     } catch (error) {
       console.error("Error fetching recipe details:", error);
     } finally {
-      loader.classList.add("d-none");
+      toggleLoader(false);
     }
   }
   

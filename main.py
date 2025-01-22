@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
 # Load environment variables from .env file
 load_dotenv()
@@ -46,16 +45,11 @@ def filter_fruits_and_vegetables(labels):
 
     # Prepare the query for Gemini API
     query = (
-    f"From the following list: [{labels_str}], return a filtered JSON array containing only specific, recognizable edible ingredients. "
-    f"This includes: "
-    f"- Common fruits, vegetables, meats, seafood, dairy, eggs, grains. "
-    f"- Named spices, herbs, teas, coffees, and condiments. "
-    f"Do not include: "
-    f"- Generic terms such as 'Ingredient,' 'Food,' 'Recipe.' or prepared food or drinks such as 'masala chai', turkish coffee', 'roast chicken' "
-    f"- Non-consumable items like 'Tableware,' 'Serveware,' 'Mug,' 'Teacup.' "
-    f"- Ambiguous or overly broad categories like 'Spice,' 'Condiment,' or 'Powder.' "
-    f"- Unusual, uncommon or extremely rare items that are not widely recognized, available in the kitchen pantry or used as ingredients. "
-    f"Respond strictly with a valid JSON array of specific edible ingredients, ensuring no additional text, explanation, or formatting errors."
+    f"From [{labels_str}], return a JSON array of specific edible ingredients: "
+    f"- Include common fruits, vegetables, meats, seafood, dairy, eggs, grains, spices, herbs, teas, coffees, and condiments. "
+    f"- Exclude generic terms (e.g., 'Ingredient,' 'Food'), prepared foods (e.g., 'masala chai'), non-consumables (e.g., 'Tableware'), "
+    f"broad categories (e.g., 'Spice'), and rare or uncommon items. "
+    f"Respond with a valid JSON array without any kind of formatting, no extra text, no extra description or errors."
 )
     
     # Make a request to Gemini API
