@@ -1,0 +1,92 @@
+# Extended Ingredients List in Python
+ingredients_list = [
+    # Fruits (expanded with alternate names)
+    "apple", "banana", "orange", "grape", "pear", "pineapple", "watermelon", 
+    "cantaloupe", "honeydew", "kiwi", "chikoo", "sapodilla", "mango", "papaya", 
+    "peach", "plum", "nectarine", "apricot", "strawberry", "blueberry", "blackberry", 
+    "raspberry", "cherry", "coconut", "fig", "pomegranate", "guava", 
+    "dragon fruit", "pitaya", "lychee", "jackfruit", "durian", "passion fruit", 
+    "star fruit", "carambola", "persimmon", "cranberry", "lemon", "lime", 
+    "tangerine", "mandarin", "grapefruit", "avocado", "date", "prune", 
+    "longan", "camu camu", "acerola", "mulberry", "huckleberry", "elderberry", 
+    "custard apple", "soursop", "sugar apple", "rambutan", "salak", 
+    "jabuticaba", "breadfruit", "golden kiwi", "yellow passion fruit", 
+    "tamarillo", "baobab", "roselle", "santol", "bilberry", "medlar", 
+    "quince", "cactus fruit", "gooseberry", "phalsa", "marang", 
+    "makrut lime", "kalamanzi", "bignay", "kalamondin", "ugli fruit", 
+    "black sapote", "white sapote", "noni", "langsat", "mangosteen", 
+    "granny smith apple", "tangerine", "clementine", "blood orange", "pink grapefruit", 
+    "seville orange", "bergamot orange", "red banana", "baby banana", "plantain", 
+    "sour cherry", "wild cherry", "cape gooseberry", "ground cherry", "juneberry", 
+
+    # Vegetables (expanded with alternate names)
+    "carrot", "broccoli", "cauliflower", "spinach", "kale", "lettuce", 
+    "arugula", "rocket", "collard greens", "cabbage", "red cabbage", 
+    "onion", "spring onion", "green onion", "scallion", "shallot", 
+    "garlic", "potato", "sweet potato", "yam", "zucchini", "courgette", 
+    "cucumber", "gherkin", "pickle", "eggplant", "aubergine", "brinjal", 
+    "okra", "lady finger", "tomato", "cherry tomato", "roma tomato", 
+    "bell pepper", "capsicum", "chili pepper", "jalapeño", "habanero", 
+    "serrano", "poblano", "beet", "beetroot", "radish", "daikon", "turnip", 
+    "parsnip", "celery", "mushroom", "button mushroom", "shiitake", 
+    "portobello", "oyster mushroom", "asparagus", "green beans", "snap peas", 
+    "pea", "corn", "sweetcorn", "baby corn", "brussels sprouts", "artichoke", 
+    "fennel", "leek", "chard", "bok choy", "pak choi", "pumpkin", "squash", 
+    "butternut squash", "acorn squash", "water chestnut", "bamboo shoot", 
+    "cassava", "taro", "malanga", "chayote", "kohlrabi", "mustard greens", 
+    "mizuna", "burdock root", "sunchoke", "lotus root", "horseradish", 
+    "nettles", "dandelion greens", "seaweed", "wakame", "nori", "kelp", 
+    "eddoe", "yautia", "gourd", "bitter melon", "snake gourd", "ridge gourd", 
+    "turmeric root", "galangal root", "amaranth leaves", "winged bean", 
+    "purslane", "water spinach", "methi", "fenugreek leaves", "scorzonera", 
+    "celtuce", "radicchio", "endive", "frisee", "broccolini", "purple sprouting broccoli", 
+    "romanesco", "pepino", "jicama", "celeriac", "daikon radish", "purple carrot", 
+
+    # Proteins (expanded)
+    "chicken", "beef", "pork", "lamb", "goat", "turkey", "duck", "fish", 
+    "salmon", "tuna", "cod", "mackerel", "sardine", "tilapia", "basa", 
+    "catfish", "snapper", "shrimp", "crab", "lobster", "scallop", "mussel", 
+    "clam", "oyster", "tofu", "tempeh", "seitan", "eggs", "duck eggs", 
+    "quail eggs", "lentils", "chickpeas", "black beans", "kidney beans", 
+    "white beans", "edamame", "peas", "quinoa", "spelt", "barley", "oats", 
+    "chia seeds", "flax seeds", "sunflower seeds", "hemp seeds", "pumpkin seeds", 
+
+    # Dairy (expanded)
+    "milk", "cheese", "butter", "yogurt", "cream", "sour cream", "cream cheese", 
+    "cottage cheese", "ricotta", "parmesan", "mozzarella", "cheddar", 
+    "feta", "blue cheese", "ghee", "goat cheese", "provolone", "brie", 
+    "camembert", "swiss cheese", "halloumi", "paneer", "kefir", "buttermilk", 
+    "clotted cream", "curds", "mascarpone", "quark", "sheep milk cheese", 
+
+    # Condiments (expanded)
+    "ketchup", "mustard", "mayonnaise", "soy sauce", "hot sauce", "sriracha", 
+    "barbecue sauce", "teriyaki sauce", "fish sauce", "hoisin sauce", 
+    "tahini", "pesto", "hummus", "vinegar", "apple cider vinegar", 
+    "balsamic vinegar", "red wine vinegar", "white vinegar", "miso paste", 
+    "wasabi", "pickle relish", "salad dressing", "ranch", "vinaigrette", 
+    "dijon mustard", "whole grain mustard", "maple syrup", "honey", 
+    "molasses", "chutney", "sambal", "aioli", "chili paste", "nut butter", 
+
+    # Pantry Staples (expanded)
+    "flour", "sugar", "brown sugar", "powdered sugar", "salt", "pepper", 
+    "baking soda", "baking powder", "yeast", "cornstarch", "rice", "quinoa", 
+    "couscous", "pasta", "noodles", "bread", "breadcrumbs", "oats", 
+    "oil", "olive oil", "vegetable oil", "canola oil", "coconut oil", 
+    "sesame oil", "stock", "broth", "canned tomatoes", "canned beans", 
+    "chocolate", "vanilla extract", "spices", "herbs", "syrups", "honey", 
+    "sweeteners", "almond flour", "coconut flour", "polenta", "cornmeal",
+
+    # Herbs and Spices
+    "basil", "oregano", "thyme", "rosemary", "cilantro", "parsley", "dill", 
+    "chives", "sage", "tarragon", "mint", "lemongrass", "bay leaves", 
+    "cinnamon", "clove", "nutmeg", "cardamom", "cumin", "turmeric", 
+    "ginger", "paprika", "chili powder", "cayenne", "black pepper", 
+    "white pepper", "mustard seeds", "fenugreek", "coriander", "saffron", 
+    "allspice", "anise", "star anise", "sumac", "za'atar", "marjoram", 
+    "lavender", "fenugreek leaves", "asafoetida", "caraway", "nigella seeds", 
+    "tea leaves", "green tea", "black tea", "white tea", "oolong tea", "chai", 
+    "earl grey", "matcha", "yerba mate", "rooibos", "herbal tea", 
+    "coffee", "coffee beans", "espresso", "cold brew", "instant coffee", 
+    "decaf coffee", "cocoa powder", "hot chocolate mix", "barley tea", 
+    "jasmine tea", "sencha", "pu-erh tea", "tea"
+]
