@@ -1,0 +1,29 @@
+{
+  "name": "smart-recipe-generator",
+  "version": "1.0.0",
+  "description": "The **Smart Recipe Generator** is a web app that allows users to upload images of ingredients, which are then recognized and refined using Google Vision and Gemini APIs. Users can customize recipe suggestions by entering dietary preferences and restrictions. The app fetches recipes from the Spoonacular API, allowing users to view detailed instructions. No user accounts are required, and no data is stored after the session ends.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pushkar2112/smart-recipe-generator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pushkar2112/smart-recipe-generator/issues"
+  },
+  "homepage": "https://github.com/pushkar2112/smart-recipe-generator#readme",
+  "dependencies": {
+    "@google-cloud/vision": "^4.3.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "sharp": "^0.33.5"
+  }
+}
