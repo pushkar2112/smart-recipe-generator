@@ -9,6 +9,27 @@ function dataURLtoFile(dataUrl, filename) {
     }
     return new File([array], filename, { type: mime });
   }
+
+// Helper to get Images from google search
+async function getImgUrl(imgKey) {
+  const response = await fetch("/api/getImg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ keywords: imgKey }),
+  });
+
+  if (!response.ok) {
+    console.log("Unable to fetch images. Please try again.");
+    return "https://placehold.co/200x200?text=Unable+to+Fetch+Images!";
+  }     
+
+  const data = await response.json();
+  console.log("Image Data:", data);
+
+  const imageUrl = data.imageUrl;
+
+  return imageUrl;
+}
   
   // Elements
   const uploadBox = document.getElementById("uploadBox");
@@ -152,7 +173,7 @@ function dataURLtoFile(dataUrl, filename) {
     });
   }
   
-  async function uploadImages(dietarySelections, allergySelections) {
+  async function uploadImages() {
     const formData = new FormData();
     uploadedImageFiles.forEach((fileData) => {
       const file = dataURLtoFile(fileData.data, fileData.name);
@@ -162,7 +183,8 @@ function dataURLtoFile(dataUrl, filename) {
     try {
       toggleLoader(true);  // Show loader during upload
   
-      const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
+      // const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
+      const response = await fetch("http://localhost:8000/api/upload/", { method: "POST", body: formData });
       const result = await response.json();
       
       // Check for empty or invalid response
@@ -273,7 +295,7 @@ function populateChecklist(items) {
   
   // Final Save Button and Fetch Recipes
   finalSubmitBtn.addEventListener("click", async () => {
-    const finalIngredients = [...selectedIngredients, ...addedIngredients];
+    const finalIngredients = [...selectedIngredients];
     const dietarySelections = collectSelections(DIETARY);
     const allergySelections = collectSelections(ALLERGY);
     finalIngredientsDisplay.innerHTML = `Final Ingredients: ${finalIngredients.join(", ")}`;
@@ -286,18 +308,24 @@ function populateChecklist(items) {
   
   // Function to fetch recipes and allow user selection
   async function fetchRecipesFromAPI(ingredients, dietaryPreferences, allergyPreferences) {
-    const query = new URLSearchParams({
-      apiKey: SPOONACULAR_API_KEY,
-      includeIngredients: ingredients.join(","),
-      diet: dietaryPreferences.join(","),
-      intolerances: allergyPreferences.join(","),
-      number: 5, // Fetch 5 recipes
-    });
+    // const query = new URLSearchParams({
+    //   apiKey: SPOONACULAR_API_KEY,
+    //   includeIngredients: ingredients.join(","),
+    //   diet: dietaryPreferences.join(","),
+    //   intolerances: allergyPreferences.join(","),
+    //   number: 5, // Fetch 5 recipes
+    // });
   
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?${query}&ignorePantry=false`);
-      console.log(`https://api.spoonacular.com/recipes/complexSearch?${query}&fillIngredients=true&ignorePantry=false`);
+      // const response = await fetch(`https://api.spoonacular.com/recipes/complexSearch?${query}&ignorePantry=false`);
+      // console.log(`https://api.spoonacular.com/recipes/complexSearch?${query}&fillIngredients=true&ignorePantry=false`);
       
+      const response = await fetch("/api/getRecipes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ingredients, dietaryPreferences, allergyPreferences }),
+    });
+
       if (!response.ok) {
         alert("Unable to fetch recipes. Please try again.");
       }     
@@ -305,13 +333,15 @@ function populateChecklist(items) {
       const data = await response.json();
       console.log(data);
       
-      displayRecipes(data.results);
+      displayRecipes(data, ingredients, dietaryPreferences, allergyPreferences);
     } catch (error) {
       console.error("Error fetching recipes:", error); 
     }
   }
   
-  function displayRecipes(recipes) {
+  async function displayRecipes(recipes, ingredients, dietaryPreferences, allergyPreferences) {
+    console.log("Here",recipes);
+    recipes.forEach((recipe) => console.log(recipe));
     recipeDisplaySection.classList.remove("d-none");
     recipeDisplaySection.innerHTML = "<h4>Available Recipes:</h4>";
   
@@ -320,30 +350,50 @@ function populateChecklist(items) {
       return;
     }
   
-    recipes.forEach((recipe) => {
+    recipes.forEach(async (recipe) => {
       const recipeDiv = document.createElement("div");
+      const imgKeyword = recipe.image;
+      console.log("Image Keywords: ",imgKeyword);
+
+      const imgUrl = await getImgUrl(imgKeyword);
+      console.log(imgUrl);
+
       recipeDiv.classList.add("recipe-item", "mb-3");
       recipeDiv.innerHTML = `
-        <h5>${recipe.title}</h5>
-        <img src="${recipe.image}" alt="${recipe.title}" class="img-thumbnail">
-        <button class="btn btn-info mt-2" onclick="selectRecipe(${recipe.id})">View Details</button>
+        <h5 class="text-semibold">${recipe.title}</h5>
+        <img src="${imgUrl}" alt="${recipe.title}" class="img-thumbnail">
+        <button class="btn btn-info mt-2">View Details</button>
       `;
+
+      const button = recipeDiv.querySelector("button");
+      button.onclick = function() {
+        selectRecipe(recipe.title, imgUrl, ingredients, dietaryPreferences, allergyPreferences);
+      };
+
       recipeDisplaySection.appendChild(recipeDiv);
     });
   }
   
   // Function to fetch and display recipe details
-  async function selectRecipe(recipeId) {
+  async function selectRecipe(recipeName, imgUrl, ingredients, dietaryPreferences, allergyPreferences) {
     toggleLoader(true);
   
     try {
-      const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`);
-      
+      // const response = await fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`);
+      // const response = await fetch(`http://localhost:8000/api/getRecipeDetails/${recipeName}/`);
+      const response = await fetch("/api/getRecipeDetails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ recipeName, ingredients, dietaryPreferences, allergyPreferences }),
+    });
+
+
       if (!response.ok) {
         alert("Unable to fetch recipes. Please try again.");
       }     
       
       const data = await response.json();
+      data["image"] = imgUrl; // set recipe image to the fetched image URL
       showRecipeDetails(data);
     } catch (error) {
       console.error("Error fetching recipe details:", error);
@@ -353,7 +403,7 @@ function populateChecklist(items) {
   }
   
   function showRecipeDetails(recipe) {
-    console.log(recipe)
+    console.log(recipe);
     const recipeDetails = document.createElement("div");
     recipeDetails.classList.add("recipe-details");
 
@@ -363,32 +413,37 @@ function populateChecklist(items) {
       <img src="${recipe.image}" alt="${recipe.title}" class="img-thumbnail mb-3">
       <p><strong>Ready In:</strong> ${recipe.readyInMinutes} minutes</p>
       <p><strong>Servings:</strong> ${recipe.servings}</p>
-      <p><strong><a href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a></strong></p>
       
       <h5>Ingredients:</h5>
       <ul>
-        ${recipe.extendedIngredients.map(ingredient => `
+        ${recipe.ingredients.map(ingredient => `
             <li>
-              <img src="https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}" alt="${ingredient.name}" class="ingredient-image">
-              ${ingredient.original}
+              ${ingredient.name} (${ingredient.quantity})
             </li>
-          `)
-        .join('')}
+          `).join('')}
       </ul>
       
       <h5>Instructions:</h5>
       <ol>
-        ${recipe.analyzedInstructions.flatMap(instruction => instruction.steps.map(step => `
+        ${recipe.steps.map(step => `
           <li>
-            ${step.step}
+            ${step.instruction}
           </li>
-        `)).join('')}
+        `).join('')}
       </ol>
+
+      <h5>Substitutions:</h5>
+      <ul>
+        ${recipe.substitutions.map(sub => `
+          <li>
+            For <strong>${sub.ingredient}</strong>, you can substitute with <strong>${sub.substitute}</strong>.
+          </li>
+        `).join('')}
+      </ul>
     `;
     
     // Clear the previous content and append the new recipe details
+    const recipeDisplaySection = document.getElementById("recipeDisplaySection"); // Ensure this exists
     recipeDisplaySection.innerHTML = "";
     recipeDisplaySection.appendChild(recipeDetails);
 }
-
-  

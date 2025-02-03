@@ -4,6 +4,7 @@ import { ImageAnnotatorClient } from "@google-cloud/vision";
 import dotenv from "dotenv";
 import sharp from "sharp";
 import fetch from "node-fetch";
+import puppeteer from "puppeteer"
 
 dotenv.config();
 
@@ -14,6 +15,45 @@ const visionClient = new ImageAnnotatorClient();
 
 app.use(express.static("public"));
 app.use(express.json());
+
+// Helper function to scrape recipe image URL
+
+async function getImageUrl(keyword) {
+    try {
+        console.log(`Searching for image: ${keyword}...`);
+
+        const browser = await puppeteer.launch({ headless: true, args: ["--ignore-certificate-errors"] }); // Run in headless mode
+        const page = await browser.newPage();
+
+        // Set User-Agent to prevent blocking
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+
+        // Go to Allrecipe Images search
+        console.log(`https://www.allrecipes.com/search?q=${encodeURIComponent(keyword)}`);
+        await page.goto(`https://www.allrecipes.com/search?q=${encodeURIComponent(keyword)}`, {
+            waitUntil: 'load',
+            timeout: 30000
+        });
+
+        console.log("Extracting image URL...");
+
+        // Extract the first image URL
+        const imageUrl = await page.evaluate(() => {
+            const images = document.querySelectorAll('img');
+            console.log("Response from search: ", images);
+            return images[0].src;
+        });
+
+        await browser.close(); // Close browser
+        console.log(`Image URL found: ${imageUrl}`);
+        
+        return imageUrl; // Return the image URL
+
+    } catch (error) {
+        console.error("Error getting image:", error);
+        return null; // Return null if error occurs
+    }
+}
 
 // Function to preprocess the image
 const preprocessImage = async (buffer) => {
@@ -79,10 +119,10 @@ const geminiFilter = async (labels) => {
        
         const query = `Provide up to 5 complete meal recipes that include [${ingredients.join(", ")}] and are suitable for a [${dietPrefs.join(", ")}] diet, excluding any recipes with [${allergyPrefs.join(", ")}]. ` +  
         `Assume the user has common pantry staples (e.g., salt, pepper, oil, flour, sugar, basic spices, garlic, onions, butter, etc.). ` +  
-        `Recipes should be full meal items, not snacks or side dishes, and may include additional ingredients to enhance the dish. ` +  
+        `Recipes should be full meal items or beverages or snacks but not side dishes, and may include additional ingredients to enhance the dish. ` +  
         `For each recipe, include: ` +  
         `1. A unique title. ` +   
-        `2. A keyword for recipe image search ` +  
+        `2. A generalised keyword for recipe image search which describes what is being made but not in much detail ` +  
         `Return the response in this format (as plain text without any extra formatting, especially no code formatting, no other text or explanation required):` +
         `{ "recipes": [ { "id", "title", "image" } ] }`;
       const apiKey = process.env.GEMINI_API_KEY;
@@ -124,7 +164,7 @@ const geminiFilter = async (labels) => {
     try {
       const query = `Provide full details for recipe ${recipe}, including ingredients with measurements, must include [${ingredients.join(", ")}] and be suitable for a [${dietPrefs.join(", ")}] diet, with allergy concerns [${allergyPrefs.join(", ")}]. ` +
         `step-by-step instructions, preparation time, and substitution suggestions. ` +
-        `Return the response in this plain text format (no formatting): { "title", "image", "readyInMinutes", "servings", "ingredients": [], "steps": [{ "number", "instruction" }], "substitutions": [{ "ingredient", "substitute" }] }`;
+        `Return the response in this plain text format (no formatting): { "title", "image", "readyInMinutes", "servings", "ingredients": [{"name", "quantity"}], "steps": [{ "number", "instruction" }], "substitutions": [{ "ingredient", "substitute" }] }`;
   
       const apiKey = process.env.GEMINI_API_KEY;
       const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -167,6 +207,29 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: "An error occurred while processing the image" });
   }
 });
+
+app.post("/api/getImg", async (req, res) => {
+  try {
+      const { keywords } = req.body;
+      console.log("Img Keyword: ", keywords);
+
+      if (!keywords) {
+          return res.status(400).json({ error: "Missing keywords for image search" });
+      }
+
+      const imgURL = await getImageUrl(keywords);
+
+      if (!imgURL) {
+          return res.status(500).json({ error: "Failed to fetch image" });
+      }
+
+      res.json({ imageUrl: imgURL }); // FIXED: Return JSON object instead of raw string
+  } catch (error) {
+      console.error("Error fetching image:", error);
+      res.status(500).json({ error: "Failed to fetch image" });
+  }
+});
+
 
 app.post("/api/getRecipes", async (req, res) => {
     try {
