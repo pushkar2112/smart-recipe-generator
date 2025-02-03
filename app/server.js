@@ -4,7 +4,8 @@ import { ImageAnnotatorClient } from "@google-cloud/vision";
 import dotenv from "dotenv";
 import sharp from "sharp";
 import fetch from "node-fetch";
-import puppeteer from "puppeteer"
+import puppeteer from "puppeteer-core"
+import chromium from "chromium";
 
 dotenv.config();
 
@@ -19,40 +20,53 @@ app.use(express.json());
 // Helper function to scrape recipe image URL
 
 async function getImageUrl(keyword) {
-    try {
-        console.log(`Searching for image: ${keyword}...`);
+  try {
+    console.log(`Searching for image: ${keyword}...`);
 
-        const browser = await puppeteer.launch({ headless: true, args: ["--ignore-certificate-errors"] }); // Run in headless mode
-        const page = await browser.newPage();
+    // Launch Puppeteer using Chromium (better for free-tier hosting)
+    const browser = await puppeteer.launch({
+      headless: true,
+      executablePath: chromium.path, // Use the chromium package
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
 
-        // Set User-Agent to prevent blocking
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+    const page = await browser.newPage();
 
-        // Go to Allrecipe Images search
-        console.log(`https://www.allrecipes.com/search?q=${encodeURIComponent(keyword)}`);
-        await page.goto(`https://www.allrecipes.com/search?q=${encodeURIComponent(keyword)}`, {
-            waitUntil: 'load',
-            timeout: 30000
-        });
+    // Set User-Agent to prevent bot detection
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    );
 
-        console.log("Extracting image URL...");
+    const searchUrl = `https://www.allrecipes.com/search?q=${encodeURIComponent(
+      keyword
+    )}`;
+    console.log(`Navigating to: ${searchUrl}`);
 
-        // Extract the first image URL
-        const imageUrl = await page.evaluate(() => {
-            const images = document.querySelectorAll('img');
-            console.log("Response from search: ", images);
-            return images[0].src;
-        });
+    await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-        await browser.close(); // Close browser
-        console.log(`Image URL found: ${imageUrl}`);
-        
-        return imageUrl; // Return the image URL
+    console.log("Waiting for images to load...");
 
-    } catch (error) {
-        console.error("Error getting image:", error);
-        return null; // Return null if error occurs
+    // Wait for recipe images to appear
+    await page.waitForSelector("img", { timeout: 10000 });
+
+    // Extract the first valid image URL
+    const imageUrl = await page.evaluate(() => {
+      const images = document.querySelectorAll("img");
+      return images.length > 0 ? images[0].src : null;
+    });
+
+    await browser.close();
+
+    if (!imageUrl) {
+      throw new Error("No valid image found.");
     }
+
+    console.log(`Image URL found: ${imageUrl}`);
+    return imageUrl;
+  } catch (error) {
+    console.error("Error getting image:", error);
+    return null;
+  }
 }
 
 // Function to preprocess the image
@@ -82,7 +96,7 @@ const detectLabels = async (imageBuffer) => {
 const geminiFilter = async (labels) => {
     try {
         console.log("Querying Gemini API for filtering...");
-      const query = `From [${labels.join(", ")}] return a plain JSON array (without any special formatting as text) of specific edible ingredients: ` +
+      const query = `From [${labels.join(", ")}] return a plain JSON array (without any special formatting as text) of specific edible ingredients (do no include any other ingredients other than already present in the give array): ` +
         `- Include common fruits, vegetables, meats, seafood, dairy, eggs, grains, spices, herbs, teas, coffees, and condiments. ` +
         `- Exclude generic terms, prepared foods, non-consumables, and broad categories. Plain text response required.`;
   
