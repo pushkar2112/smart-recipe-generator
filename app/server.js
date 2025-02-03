@@ -13,7 +13,7 @@ const port = 8000;
 const upload = multer();
 const visionClient = new ImageAnnotatorClient();
 
-app.use(express.static("public"));
+app.use(express.static("app/public"));
 app.use(express.json());
 
 // Helper function to scrape recipe image URL
