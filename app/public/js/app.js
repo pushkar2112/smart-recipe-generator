@@ -184,7 +184,7 @@ async function getImgUrl(imgKey) {
       toggleLoader(true);  // Show loader during upload
   
       // const response = await fetch("https://smart-recipe-generator.onrender.com/upload/", { method: "POST", body: formData });
-      const response = await fetch("http://localhost:8000/api/upload/", { method: "POST", body: formData });
+      const response = await fetch("/api/upload/", { method: "POST", body: formData });
       const result = await response.json();
       
       // Check for empty or invalid response
